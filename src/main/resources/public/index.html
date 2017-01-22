@@ -5,11 +5,13 @@
     <title>Chat</title>
     <link href="bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div id="channelsContainer" class="container">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-sm-8 col-sm-offset-2">
             <span class="label">Channels</span>
             <button id="addChannel" class="btn btn-primary">Add Channel</button>
             <input id="newChannelName" placeholder="Channel name">
@@ -20,9 +22,16 @@
 </div>
 <div id="chatContainer" class="container">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-sm-8 col-sm-offset-2">
             <h1 id="channelName"></h1>
-            <div id="userList"></div>
+            <div class="dropdown">
+                <button id="showUsers" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Show users
+                <span class="caret"></span>
+                </button>
+                <ul id="userList" class="dropdown-menu"></ul>
+            </div>
+            <!--<div id="userList"></div>-->
+
             <button id="leaveChannel" class="btn btn-danger">Leave Channel</button>
             <div id="chat"></div>
             <div id="chatControls">

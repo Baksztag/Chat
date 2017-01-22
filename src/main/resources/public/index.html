@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="channelsContainer" class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <span class="label">Channels</span>
+            <button id="addChannel" class="btn btn-primary">Add Channel</button>
+            <input id="newChannelName" placeholder="Channel name">
+            <div id="channelList"></div>
+        </div>
+    </div>
+
+</div>
+<div id="chatContainer" class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h1 id="channelName"></h1>
+            <div id="userList"></div>
+            <button id="leaveChannel" class="btn btn-danger">Leave Channel</button>
+            <div id="chat"></div>
+            <div id="chatControls">
+                <input id="message" placeholder="Type your message">
+                <button id="send">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="chat.js"></script>
+</body>
+</html>

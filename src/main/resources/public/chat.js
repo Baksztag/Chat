@@ -17,26 +17,57 @@ socket.onopen = function () {
 socket.onmessage = function (msg) {
     var data = JSON.parse(msg.data);
 
-    if (data.action = "listChannels") {
+    if (data.action == "listChannels") {
         updateChannels(data);
     }
 
-    if (data.action = "join") {
-        id("channelName").innerHTML = "Channel: " + data.channelName;
-        id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " joined the channel." + "</article>");
-        id("userList").innerHTML = "";
-        data.userList.forEach(function (user) {
-            id("userList").insertAdjacentHTML("afterbegin", "<li>"+ user + "</li>");
-        });
+    if (data.action == "join") {
+        addUserToChannel(data)
+    }
+
+    if (data.action == "leave") {
+        removeUserFromChannel(data)
+    }
+
+    if (data.action == "sendMessage") {
+        id("chat").insertAdjacentHTML("afterbegin", data.userMessage);
     }
 };
 
+// EVENT LISTENERS
+id("leaveChannel").addEventListener("click", function () {
+    leaveChannel();
+});
+
+id("send").addEventListener("click", function () {
+    sendMessage(id("message").value);
+    id("message").value = "";
+});
+
 // HELPER FUNCTIONS
+function addUserToChannel(data) {
+    console.log(data.userList);
+    id("channelName").innerHTML = "Channel: " + data.channelName;
+    id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " joined the channel." + "</article>");
+    id("userList").innerHTML = "";
+    data.userList.forEach(function (user) {
+        id("userList").insertAdjacentHTML("afterbegin", "<li>" + user + "</li>");
+    });
+}
+
+function removeUserFromChannel(data) {
+    id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " has left the channel." + "</article>");
+    id("userList").innerHTML = "";
+    data.userList.forEach(function (user) {
+        id("userList").insertAdjacentHTML("afterbegin", "<li>" + user + "</li>");
+    });
+}
 
 function getUserName() {
-    var name = "username=";
-    var cookie = document.cookie;
-    return cookie.substring(name.length, cookie.length);
+    return username;
+    // var name = "username=";
+    // var cookie = document.cookie;
+    // return cookie.substring(name.length, cookie.length);
 }
 
 function id(id) {
@@ -71,6 +102,30 @@ function joinChannel(channelID) {
     socket.send(JSON.stringify(obj));
 }
 
+function leaveChannel() {
+    id("channelsContainer").setAttribute("disabled", "false");
+    id("channelsContainer").style.visibility = "visible";
+    id("chatContainer").setAttribute("disabled", "true");
+    id("chatContainer").style.visibility = "hidden";
+
+    var obj = new Object();
+    obj.action = "leave";
+    obj.oldChannelID = channel;
+    obj.username = username;
+    socket.send(JSON.stringify(obj));
+}
+
+function sendMessage(message) {
+    if (message !== "") {
+        var obj = new Object();
+        obj.action = "sendMessage";
+        obj.channelID = channel;
+        obj.username = username;
+        obj.userMessage = message;
+        socket.send(JSON.stringify(obj))
+    }
+}
+
 function updateChannels(data) {
     id("channelList").innerHTML = "";
     for (var i = 0; i < data.numberOfChannels; i++) {
@@ -85,3 +140,4 @@ function updateChannels(data) {
         })
     }
 }
+

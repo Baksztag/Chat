@@ -47,7 +47,13 @@ id("leaveChannel").addEventListener("click", function () {
 
 id("send").addEventListener("click", function () {
     sendMessage(id("message").value);
-    id("message").value = "";
+
+});
+
+id("message").addEventListener("keypress", function (e) {
+    if (e.keyCode === 13) {
+        sendMessage(e.target.value);
+    }
 });
 
 
@@ -140,6 +146,7 @@ function sendMessage(message) {
         obj.userMessage = message;
         socket.send(JSON.stringify(obj))
     }
+    id("message").value = "";
 }
 
 function updateChannels(data) {

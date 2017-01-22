@@ -1,3 +1,4 @@
+import bot.Bot;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -47,7 +48,12 @@ public class MainWebSocketHandler {
         }
 
         if (req.getAction().equals("sendMessage")) {
-            sendMessageToChannel(req);
+            if(req.getChannelID() != 0) {
+                sendMessageToChannel(req);
+            }
+            else {
+                hireChatbot(user, req);
+            }
         }
 
         if (req.getAction().equals("newChannel")) {
@@ -123,6 +129,25 @@ public class MainWebSocketHandler {
                 System.err.println(e);
             }
         });
+    }
+
+    private void sendMessageToSingleUser(Session user, Request req, String sender, String message) {
+        try {
+            user.getRemote().sendString(String.valueOf(new JSONObject()
+                    .put("action", req.getAction())
+                    .put("channelID", req.getChannelID())
+                    .put("username", req.getUsername())
+                    .put("userMessage", createHtmlMessageFromSender(sender, message))
+            ));
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    private void hireChatbot(Session user, Request req) {
+        Bot bot = new Bot();
+        sendMessageToSingleUser(user, req, req.getUsername(), req.getUserMessage());
+        sendMessageToSingleUser(user, req, "Chatbot", bot.answerQuestion(req.getUserMessage()));
     }
 
     private String createHtmlMessageFromSender(String sender, String message) {

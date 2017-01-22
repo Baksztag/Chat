@@ -17,19 +17,19 @@ socket.onopen = function () {
 socket.onmessage = function (msg) {
     var data = JSON.parse(msg.data);
 
-    if (data.action == "listChannels") {
+    if (data.action === "listChannels") {
         updateChannels(data);
     }
 
-    if (data.action == "join") {
+    if (data.action === "join") {
         addUserToChannel(data)
     }
 
-    if (data.action == "leave") {
+    if (data.action === "leave") {
         removeUserFromChannel(data)
     }
 
-    if (data.action == "sendMessage") {
+    if (data.action === "sendMessage") {
         id("chat").insertAdjacentHTML("afterbegin", data.userMessage);
     }
 };

@@ -9,18 +9,20 @@ import java.util.Date;
  */
 public class Bot {
     public String answerQuestion(String question) {
-        String answer = "";
-        if(question.equals(":godzina")) {
-            answer = "Jest godzina " + getTime();
-        }
-        else if(question.equals(":dzien")) {
-            answer = "Dzisiaj jest " + getDay();
-        }
-        else if(question.equals(":pogoda")) {
-            answer = getWeather();
-        }
-        else {
-            answer = "Aby uzyskac odpowiedz wpisz ':godzina', ':dzien' lub ':pogoda'";
+        String answer;
+        switch (question) {
+            case ":godzina":
+                answer = "Jest godzina " + getTime();
+                break;
+            case ":dzien":
+                answer = "Dzisiaj jest " + getDay();
+                break;
+            case ":pogoda":
+                answer = getWeather();
+                break;
+            default:
+                answer = "Aby uzyskac odpowiedz wpisz ':godzina', ':dzien' lub ':pogoda'";
+                break;
         }
 
         return answer;
@@ -36,6 +38,6 @@ public class Bot {
     }
 
     private String getWeather() {
-        return null;
+        return "Lekkie zachmurzenie";
     }
 }

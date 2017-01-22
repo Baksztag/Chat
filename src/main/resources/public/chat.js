@@ -34,6 +34,7 @@ socket.onmessage = function (msg) {
     }
 };
 
+socket.onclose = function () { alert("WebSocket connection closed") };
 
 // EVENT LISTENERS
 id("addChannel").addEventListener("click", function () {

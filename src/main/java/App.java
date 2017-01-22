@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static spark.Spark.staticFileLocation;
-import static spark.Spark.webSocket;
+import static spark.Spark.*;
 
 /**
  * Created by jakub.a.kret@gmail.com on 2017-01-22.
@@ -22,5 +21,6 @@ public class App {
         channelNames.add("General");
         staticFileLocation("/public");
         webSocket("/main", MainWebSocketHandler.class);
+        init();
     }
 }

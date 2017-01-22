@@ -1,5 +1,5 @@
 /**
- * Created by Admin on 2017-01-22.
+ * Created by jakub.a.kret@gmail.com on 2017-01-22.
  */
 var socket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/main/");
 var channel = 0;
@@ -34,7 +34,13 @@ socket.onmessage = function (msg) {
     }
 };
 
+
 // EVENT LISTENERS
+id("addChannel").addEventListener("click", function () {
+    addChannel(id("newChannelName").value)
+    id("newChannelName").value = "";
+});
+
 id("leaveChannel").addEventListener("click", function () {
     leaveChannel();
 });
@@ -44,10 +50,6 @@ id("send").addEventListener("click", function () {
     id("message").value = "";
 });
 
-id("addChannel").addEventListener("click", function () {
-    addChannel(id("newChannelName").value)
-    id("newChannelName").value = "";
-})
 
 // HELPER FUNCTIONS
 function addChannel(channelName) {
@@ -63,14 +65,6 @@ function addUserToChannel(data) {
     console.log(data.userList);
     id("channelName").innerHTML = "Channel: " + data.channelName;
     id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " joined the channel." + "</article>");
-    id("userList").innerHTML = "";
-    data.userList.forEach(function (user) {
-        id("userList").insertAdjacentHTML("afterbegin", "<li>" + user + "</li>");
-    });
-}
-
-function removeUserFromChannel(data) {
-    id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " has left the channel." + "</article>");
     id("userList").innerHTML = "";
     data.userList.forEach(function (user) {
         id("userList").insertAdjacentHTML("afterbegin", "<li>" + user + "</li>");
@@ -127,6 +121,14 @@ function leaveChannel() {
     obj.oldChannelID = channel;
     obj.username = username;
     socket.send(JSON.stringify(obj));
+}
+
+function removeUserFromChannel(data) {
+    id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " has left the channel." + "</article>");
+    id("userList").innerHTML = "";
+    data.userList.forEach(function (user) {
+        id("userList").insertAdjacentHTML("afterbegin", "<li>" + user + "</li>");
+    });
 }
 
 function sendMessage(message) {

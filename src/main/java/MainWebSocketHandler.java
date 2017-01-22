@@ -19,11 +19,7 @@ import static j2html.TagCreator.*;
 public class MainWebSocketHandler {
     @OnWebSocketConnect
     public void onConnect(Session user) {
-        try {
-            updateUserChannelList(user);
-        } catch (Exception e) {
-            System.err.println(e);
-        }
+        updateUserChannelList(user);
     }
 
     @OnWebSocketMessage
@@ -67,7 +63,6 @@ public class MainWebSocketHandler {
                     .forEach(this::updateUserChannelList);
         }
     }
-
 
 
     private void updateUserChannelList(Session session) {

@@ -20,9 +20,24 @@ socket.onmessage = function (msg) {
     if (data.action = "listChannels") {
         updateChannels(data);
     }
+
+    if (data.action = "join") {
+        id("channelName").innerHTML = "Channel: " + data.channelName;
+        id("chat").insertAdjacentHTML("afterbegin", "<article>" + data.username + " joined the channel." + "</article>");
+        id("userList").innerHTML = "";
+        data.userList.forEach(function (user) {
+            id("userList").insertAdjacentHTML("afterbegin", "<li>"+ user + "</li>");
+        });
+    }
 };
 
 // HELPER FUNCTIONS
+
+function getUserName() {
+    var name = "username=";
+    var cookie = document.cookie;
+    return cookie.substring(name.length, cookie.length);
+}
 
 function id(id) {
     return document.getElementById(id);
@@ -41,14 +56,25 @@ function initializeConnection() {
 }
 
 function joinChannel(channelID) {
+    id("channelsContainer").setAttribute("disabled", "true");
+    id("channelsContainer").style.visibility = "hidden";
+    id("chatContainer").setAttribute("disabled", "false");
+    id("chatContainer").style.visibility = "visible";
+    id("chat").innerHTML = "";
 
+    channel = channelID;
+    var obj = new Object();
+    obj.action = "join";
+    obj.username = getUserName();
+    obj.channelID = channelID;
+    console.log(channelID);
+    socket.send(JSON.stringify(obj));
 }
 
 function updateChannels(data) {
     id("channelList").innerHTML = "";
     for (var i = 0; i < data.numberOfChannels; i++) {
-        id("channelList").insertAdjacentHTML("afterbegin",
-        "<button id='channel'" + i + ">" + data.channelNames[i] + "</button>");
+        id("channelList").insertAdjacentHTML("afterbegin", "<button id='channel" + i + "'>" + data.channelNames[i] + "</button>");
     }
 
     var channels = id("channelList").getElementsByTagName("button");

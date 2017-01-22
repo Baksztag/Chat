@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import static j2html.TagCreator.*;
 
@@ -53,7 +54,21 @@ public class MainWebSocketHandler {
         if (req.getAction().equals("sendMessage")) {
             sendMessageToChannel(req);
         }
+
+        if (req.getAction().equals("newChannel")) {
+            App.addChannel(req.getChannelName());
+            for (Map<Session, String> channel : App.channels) {
+                channel.keySet().stream()
+                        .filter(Session::isOpen)
+                        .forEach(this::updateUserChannelList);
+            }
+            App.lobby.keySet().stream()
+                    .filter(Session::isOpen)
+                    .forEach(this::updateUserChannelList);
+        }
     }
+
+
 
     private void updateUserChannelList(Session session) {
         try {

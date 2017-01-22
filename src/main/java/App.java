@@ -23,4 +23,9 @@ public class App {
         webSocket("/main", MainWebSocketHandler.class);
         init();
     }
+
+    public static void addChannel(String channelName) {
+        channels.add(new ConcurrentHashMap<>());
+        channelNames.add(channelName);
+    }
 }

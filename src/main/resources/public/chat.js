@@ -44,7 +44,21 @@ id("send").addEventListener("click", function () {
     id("message").value = "";
 });
 
+id("addChannel").addEventListener("click", function () {
+    addChannel(id("newChannelName").value)
+    id("newChannelName").value = "";
+})
+
 // HELPER FUNCTIONS
+function addChannel(channelName) {
+    if (channelName != "") {
+        var obj = new Object();
+        obj.action = "newChannel";
+        obj.channelName = channelName;
+        socket.send(JSON.stringify(obj));
+    }
+}
+
 function addUserToChannel(data) {
     console.log(data.userList);
     id("channelName").innerHTML = "Channel: " + data.channelName;

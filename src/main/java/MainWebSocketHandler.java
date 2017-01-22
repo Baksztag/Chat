@@ -33,7 +33,6 @@ public class MainWebSocketHandler {
             updateUserChannelList(user);
         }
 
-
         if (req.getAction().equals("join")) {
             App.lobby.remove(user);
             App.channels.get(req.getChannelID()).put(user, req.getUsername());

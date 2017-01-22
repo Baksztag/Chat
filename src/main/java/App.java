@@ -16,9 +16,12 @@ public class App {
     static Map<Session, String> lobby = new ConcurrentHashMap<Session, String>();
 
     public static void main(String[] args) {
-        Map<Session, String> general = new ConcurrentHashMap<Session, String>();
-        channels.add(general);
-        channelNames.add("General");
+//        Map<Session, String> general = new ConcurrentHashMap<Session, String>();
+//        channels.add(general);
+//        channelNames.add("General");
+        Map<Session, String> chatbot = new ConcurrentHashMap<Session, String>();
+        channels.add(chatbot);
+        channelNames.add("Chatbot");
         staticFileLocation("/public");
         webSocket("/main", MainWebSocketHandler.class);
         init();

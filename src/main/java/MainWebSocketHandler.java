@@ -18,6 +18,8 @@ import static j2html.TagCreator.*;
  */
 @WebSocket
 public class MainWebSocketHandler {
+    private ChatControls cc = new ChatControls();
+
     @OnWebSocketConnect
     public void onConnect(Session user) {
         updateUserChannelList(user);
@@ -30,19 +32,19 @@ public class MainWebSocketHandler {
         System.out.println(req);
 
         if (req.getAction().equals("initializeUser")) {
-            App.lobby.put(user, req.getUsername());
+            cc.getLobby().put(user, req.getUsername());
             updateUserChannelList(user);
         }
 
         if (req.getAction().equals("join")) {
-            App.lobby.remove(user);
-            App.channels.get(req.getChannelID()).put(user, req.getUsername());
+            cc.getLobby().remove(user);
+            cc.getChannels().get(req.getChannelID()).put(user, req.getUsername());
             notifyUserJoined(req);
         }
 
         if (req.getAction().equals("leave")) {
-            App.channels.get(req.getOldChannelID()).remove(user);
-            App.lobby.put(user, req.getUsername());
+            cc.getChannels().get(req.getOldChannelID()).remove(user);
+            cc.getLobby().put(user, req.getUsername());
             updateUserChannelList(user);
             notifyUserLeft(req);
         }
@@ -57,13 +59,13 @@ public class MainWebSocketHandler {
         }
 
         if (req.getAction().equals("newChannel")) {
-            App.addChannel(req.getChannelName());
-            for (Map<Session, String> channel : App.channels) {
+            cc.addChannel(req.getChannelName());
+            for (Map<Session, String> channel : cc.getChannels()) {
                 channel.keySet().stream()
                         .filter(Session::isOpen)
                         .forEach(this::updateUserChannelList);
             }
-            App.lobby.keySet().stream()
+            cc.getLobby().keySet().stream()
                     .filter(Session::isOpen)
                     .forEach(this::updateUserChannelList);
         }
@@ -74,8 +76,8 @@ public class MainWebSocketHandler {
         try {
             session.getRemote().sendString(String.valueOf(new JSONObject()
                     .put("action", "listChannels")
-                    .put("numberOfChannels", App.channels.size())
-                    .put("channelNames", App.channelNames)
+                    .put("numberOfChannels", cc.getChannels().size())
+                    .put("channelNames", cc.getChannelNames())
             ));
         } catch (Exception e) {
             System.err.println(e);
@@ -83,14 +85,14 @@ public class MainWebSocketHandler {
     }
 
     private void notifyUserJoined(Request req) {
-        App.channels.get(req.getChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
+        cc.getChannels().get(req.getChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
                         .put("action", "join")
                         .put("channelID", req.getChannelID())
                         .put("username", req.getUsername())
-                        .put("channelName", App.channelNames.get(req.getChannelID()))
-                        .put("userList", App.channels.get(req.getChannelID()).values())
+                        .put("channelName", cc.getChannelNames().get(req.getChannelID()))
+                        .put("userList", cc.getChannels().get(req.getChannelID()).values())
                 ));
             } catch (Exception e) {
                 System.err.println(e);
@@ -99,7 +101,7 @@ public class MainWebSocketHandler {
     }
 
     private void notifyUserLeft(Request req) {
-        App.channels.get(req.getOldChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
+        cc.getChannels().get(req.getOldChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
                         .put("action", "leave")
@@ -107,7 +109,7 @@ public class MainWebSocketHandler {
                         .put("username", req.getUsername())
                         .put("userMessage", createHtmlMessageFromSender("SERVER",
                                 req.getUsername() + " has left the channel."))
-                        .put("userList", App.channels.get(req.getOldChannelID()).values())
+                        .put("userList", cc.getChannels().get(req.getOldChannelID()).values())
                 ));
             } catch (Exception e) {
                 System.err.println(e);
@@ -116,7 +118,7 @@ public class MainWebSocketHandler {
     }
 
     private void sendMessageToChannel(Request req) {
-        App.channels.get(req.getChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
+        cc.getChannels().get(req.getChannelID()).keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
                         .put("action", req.getAction())

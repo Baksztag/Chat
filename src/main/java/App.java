@@ -11,24 +11,9 @@ import static spark.Spark.*;
  * Created by jakub.a.kret@gmail.com on 2017-01-22.
  */
 public class App {
-    static List<Map<Session, String>> channels = new LinkedList<Map<Session, String>>();
-    static List<String> channelNames = new LinkedList<>();
-    static Map<Session, String> lobby = new ConcurrentHashMap<Session, String>();
-
     public static void main(String[] args) {
-//        Map<Session, String> general = new ConcurrentHashMap<Session, String>();
-//        channels.add(general);
-//        channelNames.add("General");
-        Map<Session, String> chatbot = new ConcurrentHashMap<Session, String>();
-        channels.add(chatbot);
-        channelNames.add("Chatbot");
         staticFileLocation("/public");
         webSocket("/main", MainWebSocketHandler.class);
         init();
-    }
-
-    public static void addChannel(String channelName) {
-        channels.add(new ConcurrentHashMap<>());
-        channelNames.add(channelName);
     }
 }

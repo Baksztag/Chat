@@ -50,10 +50,9 @@ public class MainWebSocketHandler {
         }
 
         if (req.getAction().equals("sendMessage")) {
-            if(req.getChannelID() != 0) {
+            if (req.getChannelID() != 0) {
                 sendMessageToChannel(req);
-            }
-            else {
+            } else {
                 hireChatbot(user, req);
             }
         }

@@ -6,6 +6,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -19,6 +20,8 @@ import static j2html.TagCreator.*;
 @WebSocket
 public class MainWebSocketHandler {
     private ChatControls cc = new ChatControls();
+    private Bot bot = new Bot();
+
 
     @OnWebSocketConnect
     public void onConnect(Session user) {
@@ -53,7 +56,11 @@ public class MainWebSocketHandler {
             if (req.getChannelID() != 0) {
                 sendMessageToChannel(req);
             } else {
-                hireChatbot(user, req);
+                try {
+                    hireChatbot(user, req);
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
             }
         }
 
@@ -145,8 +152,7 @@ public class MainWebSocketHandler {
         }
     }
 
-    private void hireChatbot(Session user, Request req) {
-        Bot bot = new Bot();
+    private void hireChatbot(Session user, Request req) throws IOException {
         sendMessageToSingleUser(user, req, req.getUsername(), req.getUserMessage());
         sendMessageToSingleUser(user, req, "Chatbot", bot.answerQuestion(req.getUserMessage()));
     }

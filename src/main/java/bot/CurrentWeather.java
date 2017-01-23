@@ -21,10 +21,10 @@ public class CurrentWeather {
     }
 
     public String getCurrentWeather() throws IOException {
-        Weather weather = downloadWeather();
+        WeatherContainer weather = downloadWeather();
         StringBuilder builder = new StringBuilder();
         return builder
-                .append("Pogoda w Krakowie:\n")
+                .append("Pogoda w Krakowie: ")
                 .append("Temperatura: ").append(weather.getTemperature()).append(" stopni Celsjusza, ")
                 .append("Cisnienie: ").append(weather.getPressure()).append("hPa, ")
                 .append("Wilgotnosc: ").append(weather.getHumidity()).append("%, ")
@@ -32,9 +32,9 @@ public class CurrentWeather {
                 .toString();
     }
 
-    private Weather downloadWeather() throws IOException {
+    private WeatherContainer downloadWeather() throws IOException {
         Gson gson = new Gson();
         URL url = new URL(weatherURL);
-        return gson.fromJson(new JsonReader(new InputStreamReader(url.openStream())), Weather.class);
+        return gson.fromJson(new JsonReader(new InputStreamReader(url.openStream())), WeatherContainer.class);
     }
 }

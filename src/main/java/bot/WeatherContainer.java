@@ -3,7 +3,7 @@ package bot;
 /**
  * Created by jakub.a.kret@gmail.com on 2017-01-23.
  */
-public class Weather {
+public class WeatherContainer {
     private MainBean main;
     private WindBean wind;
 

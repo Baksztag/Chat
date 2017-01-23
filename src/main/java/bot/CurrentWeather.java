@@ -13,6 +13,7 @@ import java.net.URL;
 public class CurrentWeather {
     private String weatherURL;
 
+
     public CurrentWeather() {
         this.weatherURL = "http://api.openweathermap.org/data/2.5/weather?"
                 + "id=3094802"

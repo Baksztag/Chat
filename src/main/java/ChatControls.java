@@ -15,10 +15,10 @@ public class ChatControls {
 
 
     public ChatControls() {
-        this.channels = new LinkedList<Map<Session, String>>();
+        this.channels = new LinkedList<>();
         this.channelNames = new LinkedList<>();
-        this.lobby = new ConcurrentHashMap<Session, String>();
-        Map<Session, String> chatbot = new ConcurrentHashMap<Session, String>();
+        this.lobby = new ConcurrentHashMap<>();
+        Map<Session, String> chatbot = new ConcurrentHashMap<>();
         this.channels.add(chatbot);
         this.channelNames.add("Chatbot");
     }

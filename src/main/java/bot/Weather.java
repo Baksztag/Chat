@@ -40,6 +40,7 @@ public class Weather {
         this.wind = wind;
     }
 
+
     public static class MainBean {
         /**
          * temp : 0
